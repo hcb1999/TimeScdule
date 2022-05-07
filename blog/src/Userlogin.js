@@ -13,9 +13,10 @@ function Userlogin(){
           id:id,
           pw:pw,
         }).then((response)=>{
-
+            console.log(response.data[0].name)
             if(response.data.message){
                 setloginstatus(response.data.message);
+                console.log(response.data[0].name)
             } else{
                  navigate('/test',{
                      state: {
@@ -23,7 +24,7 @@ function Userlogin(){
                          name:response.data[0].name,
                      },
                  });
-                // setloginstatus(response.data[0].name);
+               // setloginstatus(response.data[0].name);
             }
          console.log(response);
         })

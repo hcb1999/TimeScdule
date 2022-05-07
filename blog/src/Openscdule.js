@@ -1,7 +1,6 @@
 import Fab from '@material-ui/core/Fab';           
 import AddIcon from '@material-ui/icons/Add';
 import TextField from '@material-ui/core/TextField';
-import Modal from './components/Modal';
 import React, { useEffect , useState } from 'react';
 import './App.css';
 import axios from 'axios';

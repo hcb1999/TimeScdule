@@ -1,6 +1,5 @@
 import Fab from '@material-ui/core/Fab';           
 import AddIcon from '@material-ui/icons/Add';
-import Modal from './components/Modal'
 import React, { useEffect , useState, Component } from 'react'
 import './App.css'
 import FullCalendar from '@fullcalendar/react';
@@ -17,6 +16,8 @@ import Register from './Register.js';
 import Userlogin from './Userlogin';
 import Upload from './Upload';
 import Openscdule from './Openscdule';
+import AddFriend from './AddFriend';
+
 //**프로그램 실행방법 **//
 //밑에 보이는 명령어 입력할수잇는 터미널창에서 yarn dev를 입력하면 실행됨 dev는 일종의 내가 지정한 명령어 서버와 프론트엔드를 동시에 접속할수있게만듬
 //실행하면 서버와 프론트엔드가 열리게됨 보이는 화면이 프론트엔드, 서버는 위 주소에서 5000/api/scdule을 하면 이동가능
@@ -32,6 +33,7 @@ function App() { //풀캘린더 라이브러리 사용
           <Route exact path="/login"  element={<Userlogin/>} />
           <Route exact path="/upload" element={<Upload/>}/>
           <Route exact path="/openscdule" element={<Openscdule/>}/>
+          <Route exact path="/AddFriend"  element={<AddFriend/>} />
           </Routes>
  </Router>
       </div>

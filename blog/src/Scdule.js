@@ -1,7 +1,6 @@
 import Fab from '@material-ui/core/Fab';           
 import AddIcon from '@material-ui/icons/Add';
 import TextField from '@material-ui/core/TextField';
-import Modal from './components/Modal'
 import React, { useEffect , useState } from 'react'
 import './App.css'
 import FullCalendar from '@fullcalendar/react';
@@ -18,19 +17,47 @@ import { useNavigate } from "react-router-dom";
 //밑에 보이는 명령어 입력할수잇는 터미널창에서 yarn dev를 입력하면 실행됨 dev는 일종의 내가 지정한 명령어 서버와 프론트엔드를 동시에 접속할수있게만듬
 //실행하면 서버와 프론트엔드가 열리게됨 보이는 화면이 프론트엔드, 서버는 위 주소에서 5000/api/scdule을 하면 이동가능
 
-function FullCalendarApp() { //풀캘린더 라이브러리 사용
+
+function FullCalendarApp({f}) { //풀캘린더 라이브러리 사용
 const location=useLocation();
 const {id,name} = location.state;
-const[scdule, setscdule] = useState({}); // 서버(데이터베이스)에서 데이터를 가져와 밑에 fullcalender모듈에서 event부분에 입력하면 화면에 일정이 나옴
+const[scdule, setscdule] = useState({}); // 서버에서 데이터를 가져와 밑에 fullcalender모듈에서 event부분에 입력하면 화면에 일정이 나옴
+const[friend,setfriend]= useState([{}]);
+
+
+/*for(let i =0; i<friend.length; i++){
+  <div><span>{friend[i].name}</span></div>
+  console.log(friend[i].name);
+  */
+
+  function Friend({ f }) { //map함수를 이용해서 friend의 배열을 차례로 출력한다
+    return (
+      <div>
+        <b>{f.name}</b> 
+      </div>
+    );
+  }
 
 useEffect ( ()=> {
   axios.post('http://localhost:5000/api/scdule',{
   pcode:id,
   })// 서버를 호출하고 호출한 서버에서 데이터를 가져와 setscdule 에 넣어줌 
   .then(res =>{
-    setscdule(res.data);
+    
+    console.log(res.data[0]);
+    console.log(res.data[1]);
+    console.log(res.data[1].name);
+    
+      setfriend(res.data[1]);
+    
+    setscdule(res.data[0]);
+    
+    console.log(res);
   })
 }, []);
+
+    console.log(friend);
+   
 const navigate= useNavigate();
 
 const openupload = () =>{
@@ -41,7 +68,13 @@ const openupload = () =>{
     },
 });
 }
-
+const AddFriend = () => {
+  navigate('/AddFriend',{
+    state: {
+      id:id,
+    }
+  });
+}
   return (
     
     <div className="App">
@@ -51,9 +84,15 @@ const openupload = () =>{
        <img className="Image" src="img/profile.png" />
       <h3>이름:{name}</h3>
      
-       <h3 className='textleft'>친구목록 <span className='textright'>➕</span></h3>
+       <h3 className='textleft'>친구목록 <button className='textright' onClick={AddFriend}>➕</button></h3>
        <div className='textleft'>
-         <input type='checkbox'></input>  <span>최범준</span>
+ <div>
+   {friend.map((f, index) => (
+    <Friend f={f} key={index} />
+    ))}
+       
+       </div>
+
        <br></br>
        <input type='checkbox'></input>  <span>정유민</span>  
        </div>

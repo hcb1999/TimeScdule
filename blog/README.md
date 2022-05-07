@@ -1,7 +1,7 @@
 ## Management System 
 본 프로젝트는 졸업작품 프로젝트이며 프로젝트 이름은 timescdule입니다.
 일정관리해주는 앱에서 추가적으로 sns적인 성격을 추가한 앱입니다.
-첫번쨰 커밋
+첫번쨰 커밋입니다
 
 # Getting Started with Create React App
 

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
  import { Link } from 'react-router-dom';
-
+ import {
+  Avatar, Button, CssBaseline,  TextField,FormControl, FormControlLabel,  Checkbox, FormHelperText,  Grid,  Box, Typography,  Container} from '@mui/material/';
  function Register() {
     const [user, setuser] = useState({
-      pcode:"",
       id:"",
       password: "",
       name: "",
@@ -15,8 +15,7 @@ import axios from 'axios';
     });
 console.log(user);
     const submitReview = ()=>{
-      axios.post('http://localhost:5000/api/user', {
-        pcode:user.pcode,  
+      axios.post('http://localhost:5000/api/user', {  
         id:user.id,
         password: user.password,
         name: user.name,
@@ -29,9 +28,9 @@ console.log(user);
       })
     };
    
-    const {pcode,id,password,name,email,tel,age,sex} = user;
+    const {id,password,name,email,tel,age,sex} = user;
 
-   const handleInput = (event) => {
+   const handleInput = (event) => { //구조분해할당 이해가 많이 필요할듯
         const { value, name } = event.target;
         setuser({ 
           ...user,
@@ -42,16 +41,9 @@ console.log(user);
 return (
 <div>
        
-        <div>현재 입력값: {pcode} {id} {password} {name} {email} {tel} {age} {sex}</div>
-        
-        <input     
-            value={pcode}
-            placeholder="임시 회원코드 입력(시퀀스로바꿀거)"
-            name="pcode"
-            onChange={handleInput}
-          />
+        <div>현재 입력값:  {id} {password} {name} {email} {tel} {age} {sex}</div>
+      
           <input
-          
              value={id}
             type="text"
             placeholder="아이디를 입력하세요"

@@ -1,7 +1,6 @@
 import Fab from '@material-ui/core/Fab';           
 import AddIcon from '@material-ui/icons/Add';
 import TextField from '@material-ui/core/TextField';
-import Modal from './components/Modal';
 import React, { useEffect , useState } from 'react';
 import './App.css';
 import axios from 'axios';
@@ -18,12 +17,13 @@ function Upload() {
     const [send, setsend] = useState({   // 프론트엔드 화면에서 일정을 입력하면 서버(데이터베이스)에 저장하려고 만든 변수
         pcode: id,
         scode : '',
+        ccode : '',
         title : '',
         withpeo : '',
         place : '',
         alarm: ''
       });
-      const {pcode,scode,title,withpeo,place,alarm} = send;
+      const {pcode,scode,ccode,title,withpeo,place,alarm} = send;
       const onChange = (event)=>{ 
         const {name, value} =event.target; //구조 분해 할당
         setsend({
@@ -35,6 +35,7 @@ function Upload() {
         axios.post('http://localhost:5000/api/editscdule', {
           pcode:id,  
           scode: send.scode,
+          ccode:send.ccode,
           title: send.title,
           start: selectstartdate,
           end: selectenddate,
@@ -50,8 +51,9 @@ function Upload() {
       return(
     <div className ="Container">
    
-<div>현재 입력되고 있는 값: {pcode} {scode} {title} {withpeo} {place} {alarm} </div>
+<div>현재 입력되고 있는 값: {pcode} {scode} {ccode} {title} {withpeo} {place} {alarm} </div>
      <TextField id= "standard-basic" name="scode" value ={scode} onChange ={onChange} label ="일정코드입력" />
+     <TextField  name="ccode" value ={ccode} onChange ={onChange} label ="카테고리 추가이름" />
      <TextField  name="title" value ={title} onChange ={onChange} label ="일정을 입력하세요" />
      <MuiPickersUtilsProvider utils={DateFnsUtils}>
        <DateTimePicker  value={selectstartdate} onChange={setstartdate} format="yyyy-MM-dd HH:mm"/>
