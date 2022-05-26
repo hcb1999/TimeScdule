@@ -12,18 +12,33 @@ import { MuiPickersUtilsProvider, DateTimePicker} from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import {useLocation} from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
+import {
+  ProSidebar,
+  Menu,
+  MenuItem,
+  SubMenu,
+  SidebarHeader,
+  SidebarFooter,
+  SidebarContent
+} from "react-pro-sidebar";
+import "react-pro-sidebar/dist/css/styles.css";
+import Header from "./Header";
 
 //**프로그램 실행방법 **//
 //밑에 보이는 명령어 입력할수잇는 터미널창에서 yarn dev를 입력하면 실행됨 dev는 일종의 내가 지정한 명령어 서버와 프론트엔드를 동시에 접속할수있게만듬
 //실행하면 서버와 프론트엔드가 열리게됨 보이는 화면이 프론트엔드, 서버는 위 주소에서 5000/api/scdule을 하면 이동가능
 
 
-function FullCalendarApp({f}) { //풀캘린더 라이브러리 사용
+const FullCalendarApp = () => { //풀캘린더 라이브러리 사용
 const location=useLocation();
 const {id,name} = location.state;
 const[scdule, setscdule] = useState({}); // 서버에서 데이터를 가져와 밑에 fullcalender모듈에서 event부분에 입력하면 화면에 일정이 나옴
 const[friend,setfriend]= useState([{}]);
+const [toggled, setToggled] = useState(false);
 
+const handleToggleSidebar = (value) => {
+  setToggled(value);
+};
 
 /*for(let i =0; i<friend.length; i++){
   <div><span>{friend[i].name}</span></div>
@@ -32,9 +47,9 @@ const[friend,setfriend]= useState([{}]);
 
   function Friend({ f }) { //map함수를 이용해서 friend의 배열을 차례로 출력한다
     return (
-      <div>
-        <b>{f.name}</b> 
-      </div>
+      
+        <MenuItem>{f.name}</MenuItem> 
+      
     );
   }
 
@@ -76,39 +91,70 @@ const AddFriend = () => {
   });
 }
   return (
+    <div>
+    <Header handleToggleSidebar={handleToggleSidebar} />
     
-    <div className="App">
-      <div className='Header'>
-       <header><strong>캘린더</strong></header> 
-       <hr/>  
-       <img className="Image" src="img/profile.png" />
-      <h3>이름:{name}</h3>
-     
-       <h3 className='textleft'>친구목록 <button className='textright' onClick={AddFriend}>➕</button></h3>
-       <div className='textleft'>
- <div>
-   {friend.map((f, index) => (
+      <div id ="header" style={{display:'flex'}}>
+         
+      <ProSidebar
+        style={{
+          height: "126.5vh"
+        }}
+    toggled={toggled} 
+    breakPoint="md"
+    onToggle={handleToggleSidebar}
+  >
+  <SidebarHeader>
+        <div className="sidebar-header">
+          <p className="user-name text-white mb-2">{name}</p>
+        </div>
+      </SidebarHeader>
+
+      <Menu iconShape="circle">
+          <SubMenu
+            title= "친구목록"
+          >
+            <MenuItem>
+              
+                 About
+
+            
+            </MenuItem>
+            {friend.map((f, index) => (
     <Friend f={f} key={index} />
     ))}
-       
-       </div>
+            </SubMenu>
+            <SubMenu title= "카테고리">
+            <MenuItem>여행</MenuItem>
+            <MenuItem>코딩</MenuItem>
 
-       <br></br>
-       <input type='checkbox'></input>  <span>정유민</span>  
-       </div>
+            </SubMenu>
+            </Menu>
+      
      
-      <h3 className='textleft'>카테고리 <span className='textright'>➕</span></h3>
-      <div className='textleft'>
-      <input type='checkbox'></input>  <span>여행</span>
-       <br></br>
-       <input type='checkbox'></input>  <span>친구</span>  
-       </div>
+       <h3 className='textleft'>친구목록 <button className='textright' onClick={AddFriend}>➕</button></h3>
+       <SidebarFooter style={{ textAlign: "center" }}>
+        <div
+          className="sidebar-btn-wrapper"
+          style={{
+            padding: "20px 24px"
+          }}
+        >
+          <a
+            href="https://github.com/azouaoui-med/react-pro-sidebar"
+            target="_blank"
+            className="sidebar-btn"
+            rel="noopener noreferrer"
+          >
+            <span> TimeScdule </span>
+          </a>
+        </div>
+      </SidebarFooter>
+       </ProSidebar>
      
-       <h4>내 일기장 바로가기</h4>
-       
-        </div>   
+          
+          <div style={{width:'100vw'}}>
       <FullCalendar //풀캘린더 모듈 함수
-
       
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
         initialView="dayGridMonth"
@@ -137,6 +183,7 @@ const AddFriend = () => {
         
         locale = 'ko' // 한국어버전
       />
+      </div>
     <div className='addbtn'>
         <Fab onClick={openupload} color="primary" aria-label="add" variant="extended" >
           <AddIcon onClick={openupload}/>일정추가
@@ -144,7 +191,7 @@ const AddFriend = () => {
         </div>
 
     </div>
-    
+    </div>
   );
   
 
