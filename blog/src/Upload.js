@@ -11,6 +11,7 @@ import {useNavigate} from 'react-router-dom';
 function Upload() {
     const navigate = useNavigate();
   const location=useLocation();
+  
     const {id,name} = location.state;
     const [selectstartdate, setstartdate] = useState(new Date("2014-08-18T21:11:5")); //시작시간 material-ui를 가져오는데 datetimepicker에서 new Date()로 변수를 입력받아야되서 따로 뺏음 밑에도 같음
     const [selectenddate, setenddate] = useState(new Date("2014-08-19T21:11:5")); // 종료시간
@@ -30,9 +31,10 @@ function Upload() {
           ...send, 
          [name]: value
         });
-      };
-      const submitReview = ()=>{
+      };    
+     const submitReview = ()=>{
         axios.post('http://localhost:5000/api/editscdule', {
+  
           pcode:id,  
           scode: send.scode,
           ccode:send.ccode,
@@ -41,13 +43,15 @@ function Upload() {
           end: selectenddate,
           withpeo: send.withpeo,
           place: send.place,
-          alarm: send.alarm
+          alarm: send.alarm,
+          
         }).then(()=>{
           alert('등록 완료!');
           navigate(-1);
         })
       
-      };
+     
+    };
       return(
     <div className ="Container">
    
@@ -62,10 +66,12 @@ function Upload() {
      <TextField  name='withpeo' value ={withpeo} onChange ={onChange} label ="동석자" />        
      <TextField  name='place' value ={place} onChange ={onChange} label ="장소" />
      <TextField  name='alarm' value ={alarm} onChange ={onChange} label ="알람시간" />
+    
+     
+   
      <footer>
-          <button className="close" onClick={submitReview}>
-            저장
-          </button>
+         
+     <button onClick={submitReview}>제출</button>
         </footer>
         
   

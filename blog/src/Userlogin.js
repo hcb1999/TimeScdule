@@ -16,6 +16,8 @@ function Userlogin(){
           pw:pw,
         }).then((response)=>{
             if(response.data.message){
+              alert(response.data.message);
+
                 setloginstatus(response.data.message);
             } else{
                  navigate('/test',{
@@ -24,6 +26,7 @@ function Userlogin(){
                          name:response.data[0].name,
                      },
                  });
+
                // setloginstatus(response.data[0].name);
             }
          console.log(response);

@@ -23,6 +23,7 @@ import {
 } from "react-pro-sidebar";
 import "react-pro-sidebar/dist/css/styles.css";
 import Header from "./Header";
+import Openscdule from "./Openscdule";
 
 //**프로그램 실행방법 **//
 //밑에 보이는 명령어 입력할수잇는 터미널창에서 yarn dev를 입력하면 실행됨 dev는 일종의 내가 지정한 명령어 서버와 프론트엔드를 동시에 접속할수있게만듬
@@ -34,8 +35,9 @@ const location=useLocation();
 const {id,name} = location.state;
 const[scdule, setscdule] = useState({}); // 서버에서 데이터를 가져와 밑에 fullcalender모듈에서 event부분에 입력하면 화면에 일정이 나옴
 const[friend,setfriend]= useState([{}]);
+const[category,setcategory]= useState([{}]);
 const [toggled, setToggled] = useState(false);
-
+const[test,settest] = useState(2);
 const handleToggleSidebar = (value) => {
   setToggled(value);
 };
@@ -52,6 +54,13 @@ const handleToggleSidebar = (value) => {
       
     );
   }
+function Category({c}){
+  return (
+    <MenuItem>{c.category}</MenuItem> 
+    
+  );
+}
+console.log(id);
 
 useEffect ( ()=> {
   axios.post('http://localhost:5000/api/scdule',{
@@ -61,19 +70,22 @@ useEffect ( ()=> {
     
     console.log(res.data[0]);
     console.log(res.data[1]);
-    console.log(res.data[1].name);
-    
+    console.log(res.data[2]);
+
+    setcategory(res.data[2]);
       setfriend(res.data[1]);
     
     setscdule(res.data[0]);
     
-    console.log(res);
+    console.log(res.data[0]);
   })
 }, []);
 
     console.log(friend);
    
 const navigate= useNavigate();
+
+
 
 const openupload = () =>{
   navigate('/upload',{
@@ -90,6 +102,14 @@ const AddFriend = () => {
     }
   });
 }
+const AddCategory = () => {
+  navigate('/AddCategory',{
+    state: {
+      id:id,
+    }
+  });
+}
+
   return (
     <div>
     <Header handleToggleSidebar={handleToggleSidebar} />
@@ -114,25 +134,22 @@ const AddFriend = () => {
           <SubMenu
             title= "친구목록"
           >
-            <MenuItem>
-              
-                 About
-
-            
-            </MenuItem>
-            {friend.map((f, index) => (
+          {friend.map((f, index) => (
     <Friend f={f} key={index} />
     ))}
             </SubMenu>
-            <SubMenu title= "카테고리">
-            <MenuItem>여행</MenuItem>
-            <MenuItem>코딩</MenuItem>
+            <SubMenu title= "카테고리">       
+      {category.map((c, index) => (
+        
+    <Category c={c} key={index} />
+    ))}
 
             </SubMenu>
             </Menu>
       
-     
-       <h3 className='textleft'>친구목록 <button className='textright' onClick={AddFriend}>➕</button></h3>
+            <h3 className='textleft'>카테고리 추가 <button className='textright' onClick={AddCategory}>➕</button></h3>
+       <h3 className='textleft'>친구추가 <button className='textright' onClick={AddFriend}>➕</button></h3>
+      
        <SidebarFooter style={{ textAlign: "center" }}>
         <div
           className="sidebar-btn-wrapper"
@@ -146,7 +163,6 @@ const AddFriend = () => {
             className="sidebar-btn"
             rel="noopener noreferrer"
           >
-            <span> TimeScdule </span>
           </a>
         </div>
       </SidebarFooter>
@@ -156,25 +172,33 @@ const AddFriend = () => {
           <div style={{width:'100vw'}}>
       <FullCalendar //풀캘린더 모듈 함수
       
+      
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
         initialView="dayGridMonth"
         headerToolbar={{ // 화면 중앙 상단 헤더부분 center 순서대로 월 주 일
           center: 'dayGridMonth,timeGridWeek,timeGridDay', 
         }}
-        
         events={scdule} // 일정을 달력위에 뿌려줌
         eventColor="red"
+        
         nowIndicator 
+        height={'100vh'}
         dateClick={(info) => console.log(info.event.start)} //날짜 클릭시 나오는 함수 
         eventClick={(info) => {
           axios.post('http://localhost:5000/api/selectscdule', {
           scode: info.event.extendedProps.scode
         }).then((response)=>{
           navigate('/openscdule',{
-            state:{
+            state:{ 
+                 pcode:response.data[0].pcode,
+                 ccode:response.data[0].ccode,
                  title:response.data[0].title,
+                 start:response.data[0].start,
+                 end:response.data[0].end,
                  people:response.data[0].withpeo,
-                 place: response.data[0].place
+                 place: response.data[0].place,
+                 alarm:response.data[0].alarm,
+                 test: friend
             },
           });
         })

@@ -1,4 +1,6 @@
 const express = require('express');
+const path = require("path");
+const multer = require("multer");
 const bodyparser = require('body-parser');
 const app = express();
 const port = process.env.PORT || 5000;
@@ -12,6 +14,12 @@ const db = mysql.createPool({ //서버에서 데이터베이스 연결을 위한
    multipleStatements: true
 
 });
+const storage = multer.diskStorage({
+   destination: "./public/img/",
+   filename: function(req, file, cb) {
+     cb(null, "imgfile" + Date.now() + path.extname(file.originalname));
+   }
+ });
 // REST API 에는 4가지 메소드가 있는데 GET: 데이터 조회(SELECT) POST:데이터 등록및 전송(INSERT), PUT:데이터 수정(UPDATE), DELETE:데이터삭제(DELETE).
 
 app.use(cors()); // cors라고 서버랑프론트엔드가 포트가 다르면 cors위반이라고 떠서 이 함수를 써줘야함
@@ -21,9 +29,10 @@ app.use(bodyparser.urlencoded({extended: true}));
 app.post('/api/scdule', (req, res) => { // api/scdule서버에서 res=응답을 한결과를 프론트엔드에 send함수를 써서 보냄 get=서버에서 데이터를 프론트엔드로 보내주는 역할
   const pcode = req.body.pcode;
   const sql1 = 'SELECT * FROM daily WHERE pcode = ?; ';
-  const sql2 = 'SELECT people.name FROM friend, people WHERE friend.id = ? AND friend.fid = people.id; ';
+  const sql2 = 'SELECT people.name,people.id FROM friend, people WHERE friend.id = ? AND friend.fid = people.id; ';
+  const sql3 = 'SELECT catagory.category FROM catagory, people WHERE catagory.pcode =? AND catagory.pcode = people.id; ';
    db.query(
-      sql1+sql2,[pcode,pcode],
+      sql1+sql2+sql3,[pcode,pcode,pcode],
      (err,results,fields)=>{
         
         if(!err){
@@ -68,6 +77,18 @@ app.post('/api/scdule', (req, res) => { // api/scdule서버에서 res=응답을 
    });
   });
 
+  app.post("/api/AddCategory", (req, res) => {
+   const id = req.body.id;
+   const catecory = req.body.cate;
+   const catecolor = req.body.color;
+   const madetime =req.body.date;
+   const sqlQuery = "INSERT INTO catagory (pcode, category, CATECOLOR, MADETIME) VALUES (?,?,?,?)";
+   
+   db.query(sqlQuery, [id,catecory,catecolor,madetime], (err, result) =>{
+      res.send('success');
+   });
+  });
+  
   app.post("/api/AddFriend", (req, res) => {
    const id = req.body.id;
    const fid = req.body.fid;
@@ -79,7 +100,20 @@ app.post('/api/scdule', (req, res) => { // api/scdule서버에서 res=응답을 
       res.send('success');
    });
   });
-
+  app.post("/api/sharedaily", (req, res) => {
+   const pcode = req.body.pcode;
+   const scode = req.body.scode;
+   const title = req.body.title;
+   const start = req.body.start;
+   const end = req.body.end;
+   const withpeo = req.body.withpeo;
+   const place = req.body.place;
+   const alarm = req.body.alarm;
+   const sqlQuery = "INSERT INTO daily (scode,pcode, title, start, end, withpeo, place, alarm) VALUES (?,?,?,?,?,?,?,?)";
+   db.query(sqlQuery, [scode, pcode, title, start, end, withpeo, place, alarm], (err, result) => {
+       res.send('success!');
+   });
+  });
 
   app.post("/api/login", (req,res)=> {
      const userid= req.body.id;
@@ -94,7 +128,7 @@ app.post('/api/scdule', (req, res) => { // api/scdule서버에서 res=응답을 
            if(result.length >0){
               res.send(result);
           } else {
-             res.send({message: "wrong userid and password"});
+             res.send({message: "아이디 또는 비밀번호를 다시 입력하세요!"});
           }
         }
      );

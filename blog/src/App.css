@@ -95,6 +95,9 @@ hr{
 
 
 
+
+
+
 .body {
   margin: 0;
   height: 100vh;
@@ -243,7 +246,7 @@ hr{
   padding-bottom: 2.4rem;
   margin-bottom: 3.2rem;
   font-weight: bold;
-  background: white;
+  background: rgba(240, 236, 236, 0.05);
   text-align: center;
 }
 .sidebar-header .user-email {

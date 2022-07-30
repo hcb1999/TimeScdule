@@ -43,7 +43,7 @@ const Header = (props) => {
             >
 \            </div>
             <Typography variant="h6" className={classes.title}>
-              Photos
+              TimeScduler
             </Typography>
 
             <div>
