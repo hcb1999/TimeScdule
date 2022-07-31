@@ -14,12 +14,6 @@ const db = mysql.createPool({ //서버에서 데이터베이스 연결을 위한
    multipleStatements: true
 
 });
-const storage = multer.diskStorage({
-   destination: "./public/img/",
-   filename: function(req, file, cb) {
-     cb(null, "imgfile" + Date.now() + path.extname(file.originalname));
-   }
- });
 // REST API 에는 4가지 메소드가 있는데 GET: 데이터 조회(SELECT) POST:데이터 등록및 전송(INSERT), PUT:데이터 수정(UPDATE), DELETE:데이터삭제(DELETE).
 
 app.use(cors()); // cors라고 서버랑프론트엔드가 포트가 다르면 cors위반이라고 떠서 이 함수를 써줘야함
